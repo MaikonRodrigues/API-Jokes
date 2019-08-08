@@ -18,10 +18,10 @@ class PiadasController extends Controller
         return $piada;
     }
     //Adiciona piada
-    public function addPiada(Request $req){
+    public function addPiada(Request $request){
         try{
             $piadas = new Piada;
-            $piadas->descricao = $req->descricao_app;
+            $piadas->descricao = $request->descricao_app;
             $piadas->save();
 
             return['insert', 'ok'];
@@ -35,7 +35,7 @@ class PiadasController extends Controller
     public function atualizarPiada(Request $request, $id){
         try{
             $piadas = Piada::find($id);
-            $piadas->descricao = $req->descricao_app;
+            $piadas->descricao = $request->descricao_app;
             $piadas->save();
 
             return['update', 'ok'];

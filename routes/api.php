@@ -29,11 +29,11 @@ Route::namespace('Api')->group(function(){
     Route::get('/piadas/{id}','PiadasController@getPiadas');
 
     // Inserir piada
-    Route::post('/piadas/{id}','PiadasController@addPiada');
+    Route::post('/piadas','PiadasController@addPiada');
 
     // Inserir piada
     Route::put('/piadas/{id}','PiadasController@atualizarPiada');
 
      // Inserir piada
-     Route::delete('/piadas/{id}','PiadasController@deletarPiada');
+     Route::delete('/deletePiada/{id}','PiadasController@deletarPiada');
 });
