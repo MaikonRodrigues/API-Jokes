@@ -5,7 +5,7 @@
     @yield('css')
 @stop
 
-@section('body_class', 'register-page')
+@section('body_class', 'register-page') 
 
 @section('body')
     <div class="register-box">

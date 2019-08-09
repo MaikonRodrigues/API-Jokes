@@ -3,7 +3,7 @@
 @section('title', 'Home')
 
 @section('content_header')
-    <h1>Comunidade das Piadas</h1>
+    <h1>Comunidade das Piadas</h1> 
 @stop
 
 @section('content') 

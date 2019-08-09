@@ -43,3 +43,6 @@ Route::post('/editar/{id}', 'PiadaController@update');
 
 
  
+Auth::routes();
+
+//Route::get('/home', 'HomeController@index')->name('home');

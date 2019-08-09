@@ -12,6 +12,17 @@ class PiadaController extends Controller
     | Views Functions
     |--------------------------------------------------------------------------
     */
+    
+     /*Funcao chama view Login
+    Public function viewLogout(){       
+        return view('vendor/adminlte/login');
+    }
+
+     // Funcao chama view Register
+     Public function viewRegister(){       
+        return view('vendor/adminlte/register');
+    }*/
+
     Public function viewIndex(){
         $piadas = Piada::all();
         //dd($piadas);
