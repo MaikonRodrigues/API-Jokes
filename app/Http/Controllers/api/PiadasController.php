@@ -38,22 +38,22 @@ class PiadasController extends Controller
             $piadas->descricao = $request->descricao_app;
             $piadas->save();
 
-            return['update', 'ok'];
+            return 'ok';
 
         }catch(\Exception $erro){
 
-            return['update', 'erro'];
+            return 'erro';
         }
     }
     public function deletarPiada($id){
         try{
             $piada = Piada::find($id);
             $piada->delete();
-            return['delete', 'ok'];
+            return 'ok';
 
         }catch(\Exception $erro){
 
-            return['delete', 'erro'];
+            return 'erro';
         }
     }
 
