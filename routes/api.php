@@ -28,6 +28,9 @@ Route::namespace('Api')->group(function(){
     // Busca piada pelo id
     Route::get('/piadas/{id}','PiadasController@getPiadas');
 
+    // Busca user pelo id
+    Route::get('/user/{id}','PiadasController@getUser');
+
     // Inserir piada
     Route::post('/piadas','PiadasController@addPiada');
 

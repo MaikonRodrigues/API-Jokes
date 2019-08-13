@@ -32,7 +32,12 @@ class PiadaController extends Controller
 
     // Funcao chama view Cria piada
     Public function ViewCreatePiada(){
-        return view('create_piada');
+        if (auth()->check()) {
+            return view('create_piada');
+        }else {
+            return redirect('/login');
+        }
+       
     }
 
     // Funcao chama a view Editar piada
@@ -42,7 +47,7 @@ class PiadaController extends Controller
         return view('editar',$piada);
     }
     
-
+    //  $phone = User::find(1)->phone;
 
     /*
     |--------------------------------------------------------------------------
@@ -54,9 +59,9 @@ class PiadaController extends Controller
     public function createPiada(Request $request){
        try{
             $piadas = new Piada;
-            $piadas->descricao = $request->descricao_form;
+            $piadas->descricao = $request->descricao_form;            
+            $piadas->user_id = auth()->user()->id;
             $piadas->save();
-
             return redirect('/')->with('success', 'Piada adicionada com sucesso');
 
        }catch(\Exepction $erro){

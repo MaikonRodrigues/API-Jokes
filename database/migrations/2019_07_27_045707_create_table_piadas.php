@@ -17,8 +17,14 @@ class CreateTablePiadas extends Migration
             $table->bigIncrements('id');
             $table->string("descricao");
             $table->string("categoria")->default("geral");
+            $table->unsignedBigInteger('user_id')->unsigned();
             $table->integer("curtidas")->default(0);
             $table->integer("deslikes")->default(0);
+            
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
 
         });
     }
