@@ -22,6 +22,8 @@ Route::get('/status', function(){
 });
 
 Route::namespace('Api')->group(function(){
+    // Busca imagem do user
+    Route::get('/image/{name}','PiadasController@getImage');
     // Busca todas as piadas
     Route::get('/piadas','PiadasController@piadas');
 

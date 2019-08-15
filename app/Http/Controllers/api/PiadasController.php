@@ -5,10 +5,28 @@ namespace App\Http\Controllers\api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Piada;
+use Response;
 use App\User; 
+use Auth;
+
 
 class PiadasController extends Controller
 {
+    public function getImage($fileName){
+       
+        $user = Auth::user();
+        if ($user->avatar == "default.png") {
+            // Salvando nova imagem
+            $path = public_path().'/uploads/avatars/'.$fileName;
+            return Response::download($path); 
+        }else{
+            //  Deletar foto antiga
+            File::delete('/uploads/avatars/'.$user->avatar);
+            // Salvando nova imagem
+            $path = public_path().'/uploads/avatars/'.$fileName;
+            return Response::download($path); 
+        }            
+    }
     //Busca todas as piadas
     public function piadas(){
         return Piada::all();
@@ -21,7 +39,7 @@ class PiadasController extends Controller
     // Busca de usuario pelo id
     public function getUser($id){
         $user = User::find($id);        
-        return $user;
+        return User::all();
     }
     //Adiciona piada
     public function addPiada(Request $request){
@@ -32,6 +50,24 @@ class PiadasController extends Controller
 
             return 'ok';
 
+        }catch(\Exception $erro){
+
+            return 'erro';
+        }
+    }
+    //Atualizar user
+    public function atualizarUser(Request $request){
+        try{
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $filename = time().'.'.$avatar->getClientOriginalExtension();
+                Image::make($avatar)->resize(300, 300)->save( public_path('/uploads/avatars/'.$filename ));
+                $user = Auth::user();
+                $user->avatar = $filename;
+                $user->save();
+                return 'ok';
+            }         
+            
         }catch(\Exception $erro){
 
             return 'erro';
@@ -51,6 +87,7 @@ class PiadasController extends Controller
             return 'erro';
         }
     }
+    //  Deletar piada
     public function deletarPiada($id){
         try{
             $piada = Piada::find($id);

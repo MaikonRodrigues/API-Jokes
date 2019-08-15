@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Piada;
+use Auth;
+use Image;
 
 class PiadaController extends Controller  
 {
@@ -23,11 +25,24 @@ class PiadaController extends Controller
         return view('vendor/adminlte/register');
     }*/
 
+    Public function viewLogin(){ 
+        Auth::logout();                
+        return redirect('/login');              
+    }
+
+   
+
+    
+
     Public function viewIndex(){
-        $piadas = Piada::all();
-        //dd($piadas);
-        $array_piadas = array("piadas"=>$piadas);
-        return view("home", $array_piadas);
+        if (auth()->check()) {
+            $piadas = Piada::all();
+            //dd($piadas);
+            $array_piadas = array("piadas"=>$piadas);
+            return view("home", $array_piadas);
+        }else {           
+            return redirect('/login');
+        }       
     }
 
     // Funcao chama view Cria piada

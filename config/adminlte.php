@@ -110,6 +110,12 @@ return [
     'menu' => [
         'Menu Principal',
         [
+            'text'        => 'Profile',
+            'url'         => 'settings',
+            'icon'        => 'user',
+            
+        ],
+        [
             'text' => 'Home',
             'url'  => 'home',
         ],
