@@ -12,20 +12,24 @@ use Auth;
 
 class PiadasController extends Controller
 {
-    public function getImage($fileName){
+    /**
+     *  if ($user->avatar == "default.png") {
+     *       // Salvando nova imagem
+     *       $path = public_path().'/uploads/avatars/'.$fileName;
+     *       return Response::download($path); 
+     *   }else{
+    *        //  Deletar foto antiga
+     *       File::delete('/uploads/avatars/'.$user->avatar);
+    *        // Salvando nova imagem
+     *       $path = public_path().'/uploads/avatars/'.$fileName;
+     *       return Response::download($path); 
+     *   }            
+     */
+    public function getImage($fileName){       
+               
+        $path = public_path().'/uploads/avatars/'.$fileName;
+        return Response::download($path); 
        
-        $user = Auth::user();
-        if ($user->avatar == "default.png") {
-            // Salvando nova imagem
-            $path = public_path().'/uploads/avatars/'.$fileName;
-            return Response::download($path); 
-        }else{
-            //  Deletar foto antiga
-            File::delete('/uploads/avatars/'.$user->avatar);
-            // Salvando nova imagem
-            $path = public_path().'/uploads/avatars/'.$fileName;
-            return Response::download($path); 
-        }            
     }
     //Busca todas as piadas
     public function piadas(){

@@ -13,26 +13,12 @@ class PiadaController extends Controller
     |--------------------------------------------------------------------------
     | Views Functions
     |--------------------------------------------------------------------------
-    */
-    
-     /*Funcao chama view Login
-    Public function viewLogout(){       
-        return view('vendor/adminlte/login');
-    }
-
-     // Funcao chama view Register
-     Public function viewRegister(){       
-        return view('vendor/adminlte/register');
-    }*/
+    */   
 
     Public function viewLogin(){ 
         Auth::logout();                
         return redirect('/login');              
-    }
-
-   
-
-    
+    }    
 
     Public function viewIndex(){
         if (auth()->check()) {
