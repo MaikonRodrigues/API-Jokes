@@ -22,6 +22,23 @@ Route::get('/status', function(){
 });
 
 Route::namespace('Api')->group(function(){
+
+  /*
+|--------------------------------------------------------------------------
+| API Routes Users
+|--------------------------------------------------------------------------
+|
+    */
+// Inserir piada
+Route::post('/addUser','UsersController@addUser');
+
+
+    /*
+|--------------------------------------------------------------------------
+| API Routes Piadas
+|--------------------------------------------------------------------------
+|
+    */
     // Busca imagem do user
     Route::get('/image/{name}','PiadasController@getImage');
     // Busca todas as piadas

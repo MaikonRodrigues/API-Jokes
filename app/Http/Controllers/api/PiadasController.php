@@ -50,6 +50,7 @@ class PiadasController extends Controller
         try{
             $piadas = new Piada;
             $piadas->descricao = $request->descricao_app;
+            $piadas->user_id = $request->user_id;
             $piadas->save();
 
             return 'ok';
