@@ -13,17 +13,19 @@ use Image;
 
 class UsersController extends Controller
 {
+    
+
     protected function addUser(Request $request)
     {
-        try{
+        try{                  
 
-            User::create([
+            return User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
            
-            return  "ok";
+              
             
         }catch(\Exception $erro){
 

@@ -56,6 +56,6 @@ Route::post('/addUser','UsersController@addUser');
     // Inserir piada
     Route::put('/piadas/{id}','PiadasController@atualizarPiada');
 
-     // Inserir piada
-     Route::delete('/deletePiada/{id}','PiadasController@deletarPiada');
+    // Inserir piada
+    Route::delete('/deletePiada/{id}','PiadasController@deletarPiada');
 });
