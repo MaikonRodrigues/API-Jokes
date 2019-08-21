@@ -42,6 +42,8 @@ Route::get('/settings', 'UserController@settings');
 Route::post('/settings', 'UserController@updateAvatar');
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Functions post Routes

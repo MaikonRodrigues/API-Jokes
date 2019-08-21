@@ -29,8 +29,18 @@ Route::namespace('Api')->group(function(){
 |--------------------------------------------------------------------------
 |
     */
-// Inserir piada
+// Inserir user
 Route::post('/addUser','UsersController@addUser');
+
+// login user
+Route::post('/login','UsersController@login');
+
+// Rota para configurar user
+Route::post('/image/{image}', 'UsersController@updateAvatar');
+
+// Rota para configurar user
+Route::get('/getImage/{image}', 'UsersController@getImage');
+
 
 
     /*

@@ -7,26 +7,41 @@ use App\Piada;
 use Response;
 use App\User; 
 use Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Image;
 
 
 class UsersController extends Controller
 {
+    protected function login(Request $request){
+         
+        if( Auth::attempt([
+           'email' => $request->email, 
+           'password' => $request->password])){
+
+            $user = DB::table('users')->where('email', $request->email)->first();
+            return  Response::json($user);
+        }else{
+            return 'erro';
+        }
+    }
+
+    public function getImage($fileName){      
+               
+        $path = public_path().'/uploads/avatars/'.$fileName;
+        return Response::download($path); 
+       
+    }
     
-
-    protected function addUser(Request $request)
-    {
-        try{                  
-
+   
+    protected function addUser(Request $request){
+        try{                 
             return User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-            ]);
-           
-              
-            
+            ]);             
         }catch(\Exception $erro){
 
             return 'erro';
@@ -48,11 +63,14 @@ class UsersController extends Controller
             $avatar = $request->file('avatar');
             $filename = time().'.'.$avatar->getClientOriginalExtension();
             Image::make($avatar)->resize(300, 300)->save( public_path('uploads/avatars/'.$filename ));
-            $user = Auth::user();
+            $user = Auth::find($request->id);
             $user->avatar = $filename;
             $user->save();
+            return 'ok'; 
+        }else{
+            return 'erro';
         }
-        return view("settings", $user); 
+         
     }
 
     public function update(UpdateAccount $request){

@@ -12,9 +12,9 @@ class LoginController extends Controller
     | Login Controller
     |--------------------------------------------------------------------------
     |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
+    | Este controlador manipula usuários autenticados para o aplicativo e 
+    | redirecionando-os para sua tela inicial. O controlador usa uma característica 
+    | para fornecer convenientemente sua funcionalidade para seus aplicativos.
     |
     */
 
