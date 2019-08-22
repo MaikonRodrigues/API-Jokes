@@ -49,15 +49,16 @@ class PiadasController extends Controller
     public function addPiada(Request $request){
         try{
             $piadas = new Piada;
-            $piadas->descricao = $request->descricao_app;
+            $piadas->descricao = $request->descricao_app;            
             $piadas->user_id = $request->user_id_app;
+            $piadas->categoria = $request->categoria_app;
             $piadas->save();
 
             return 'ok';
 
         }catch(\Exception $erro){
 
-            return 'erro';
+            return "erro";
         }
     }
     //Atualizar user
