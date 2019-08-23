@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Piada;
+use App\Categoria;
 use Response;
 use App\User; 
 use Auth;

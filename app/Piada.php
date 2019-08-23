@@ -10,8 +10,8 @@ class Piada extends Model{
     {
         return $this->hasOne(User::class);
     }
-    public function categoria()
+  /*  public function categoria()
     {
         return $this->hasOne(Categoria::class);
-    }
+    }*/
 }

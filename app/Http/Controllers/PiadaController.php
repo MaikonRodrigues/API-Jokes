@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Piada;
+use App\Categoria;
 use Auth;
 use Image;
 
@@ -23,8 +24,9 @@ class PiadaController extends Controller
     Public function viewIndex(){
         if (auth()->check()) {
             $piadas = Piada::all();
+            $categorias = Categoria::all();
             //dd($piadas);
-            $array_piadas = array("piadas"=>$piadas);
+            $array_piadas = array("piadas"=>$piadas, "categorias"=>$categorias);
             return view("home", $array_piadas);
         }else {           
             return redirect('/login');

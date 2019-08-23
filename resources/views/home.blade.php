@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <!-- /.box-header -->
+        <!-- /.box-header --> 
         <div class="box-body table-responsive no-padding">
           <table class="table table-hover">
             <tbody><tr>
@@ -33,9 +33,13 @@
               <th>Opções</th>
             </tr>
             @foreach ($piadas as $pia)
-            <tr>
+              <tr>
               <td>{{ $pia->id }}</td>
-              <td>{{ $pia->categoria }}</td>
+              @foreach ($categorias as $cat)
+                @if($pia->categoria_id == $cat->id)
+                  <td>{{ $cat->nome }}</td>
+                @endif
+              @endforeach
               <td><span class="label label-danger">{{ $pia->curtidas }}</span></td>
               <td><span class="label label-success">{{ $pia->deslikes }}</span></td>              
               <td>{{ $pia->descricao }}</td>
@@ -43,8 +47,8 @@
                 <a class="btn btn-info" href= "editar/{{$pia->id}}">Editar</a> 
                 <a class="btn btn-danger" href= "excluir/{{$pia->id}}">Excluir</a>
               </td>
-            </tr>
-            
+              </tr>
+             
             @endforeach
             
           </tbody></table>

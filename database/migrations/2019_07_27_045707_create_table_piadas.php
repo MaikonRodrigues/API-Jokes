@@ -15,26 +15,21 @@ class CreateTablePiadas extends Migration
     {
         Schema::create('piadas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string("descricao");
-            $table->string("categoria")->default("geral");
-            $table->unsignedBigInteger('user_id')->unsigned();
-            $table->unsignedBigInteger('categoria_id')->unsigned();
+            $table->string("descricao");        
+            $table->unsignedBigInteger('user_id')->unsigned();  
+            $table->integer('categoria_id')->default(1);
             $table->integer("curtidas")->default(0);
             $table->integer("deslikes")->default(0);
-            
+            $table->timestamps();
+
             $table->foreign('user_id')
-                ->references('id')
-                ->on('users') 
+                ->references('id')->on('users') 
                 ->onDelete('cascade');
 
-            $table->foreign('categoria_id')
-                ->references('id')
-                ->on('piadas') 
-                ->onDelete('cascade');
             
-           $table->timestamps();
-
         });
+       
+        
     }
 
     /**

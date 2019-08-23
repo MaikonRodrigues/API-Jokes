@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Piada;
+use App\Categoria;
 use Response;
 use App\User; 
 use Auth;
@@ -35,6 +36,10 @@ class PiadasController extends Controller
     public function piadas(){
         return Piada::all();
     }
+    // Busca todas as categorias 
+    public function getCategorias(){               
+        return Categoria::all();
+    }
     // Busca piada pelo id
     public function getPiadas($id){
         $piada = Piada::find($id);
@@ -45,20 +50,21 @@ class PiadasController extends Controller
         $user = User::find($id);        
         return User::all();
     }
+   
     //Adiciona piada
     public function addPiada(Request $request){
         try{
             $piadas = new Piada;
             $piadas->descricao = $request->descricao_app;            
             $piadas->user_id = $request->user_id_app;
-            $piadas->categoria = $request->categoria_app;
+            $piadas->categoria_id = $request->categoria_app;
             $piadas->save();
 
             return 'ok';
 
         }catch(\Exception $erro){
 
-            return "erro";
+            return $erro;
         }
     }
     //Atualizar user

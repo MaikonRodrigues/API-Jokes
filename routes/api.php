@@ -51,8 +51,12 @@ Route::get('/getImage/{image}', 'UsersController@getImage');
     */
     // Busca imagem do user
     Route::get('/image/{name}','PiadasController@getImage');
+
     // Busca todas as piadas
     Route::get('/piadas','PiadasController@piadas');
+
+    // Busca todas as piadas
+    Route::get('/categorias','PiadasController@getCategorias');
 
     // Busca piada pelo id
     Route::get('/piadas/{id}','PiadasController@getPiadas');
