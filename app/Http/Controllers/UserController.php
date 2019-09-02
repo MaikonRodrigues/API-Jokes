@@ -24,6 +24,9 @@ class UserController extends Controller
             $filename = time().'.'.$avatar->getClientOriginalExtension();
             Image::make($avatar)->resize(300, 300)->save( public_path('uploads/avatars/'.$filename ));
             $user = Auth::user();
+           // if ($user->avatar != 'defalt.jpg') {
+           //     Image::delete('uploads/avatars/'.$user->avatar);
+            //}    
             $user->avatar = $filename;
             $user->save();
         }

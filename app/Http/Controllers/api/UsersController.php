@@ -27,7 +27,7 @@ class UsersController extends Controller
             return 'erro';
         }
     }
-
+   
     public function getImage($fileName){      
                
         $path = public_path().'/uploads/avatars/'.$fileName;
@@ -62,9 +62,12 @@ class UsersController extends Controller
     Public function updateAvatar(Request $request){
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $filename = time().'.'.$avatar->getClientOriginalExtension();
+            $filename = time().'.'.$avatar->getClientOriginalExtension();            
             Image::make($avatar)->resize(300, 300)->save( public_path('uploads/avatars/'.$filename ));
             $user = Auth::find($request->id);
+           /* if ($user->avatar != 'defalt.jpg') {
+                Image::delete('uploads/avatars/'.$user->avatar);
+            }    */        
             $user->avatar = $filename;
             $user->save();
             return 'ok'; 

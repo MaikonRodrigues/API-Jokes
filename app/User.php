@@ -12,6 +12,10 @@ class User extends Authenticatable
     public function piada(){
         return $this->belongsTo(Piada::class);
     }
+    public function likes()
+    {
+        return $this->hasMany('App\Like');
+    }
 
     /**
      * The attributes that are mass assignable.

@@ -8,6 +8,7 @@ use App\Piada;
 use App\Categoria;
 use Response;
 use App\User; 
+use App\Like;
 use Auth;
 
 
@@ -110,6 +111,37 @@ class PiadasController extends Controller
 
             return 'erro';
         }
+    }
+    public function postLikePiada(Request $piadaId)
+    {
+        $piada_id = $piadaId;
+        $is_like = true;
+        $update = false;
+        $piada = Piada::find($post_id);
+        if (!$piada) { 
+            return null;
+        }
+        $user = Auth::user();
+        $like = $user->likes()->where('piada_id', $piada_id)->first();
+        if ($like) {
+            $already_like = $like->like;
+            $update = true;
+            if ($already_like == $is_like) {
+                $like->delete();
+                return 'deletado';
+            }
+        } else {
+            $like = new Like();
+        }
+        $like->like = $is_like;
+        $like->user_id = $user->id;
+        $like->piada_id = $piada->id;
+        if ($update) {
+            $like->update();
+        } else {
+            $like->save();
+        }
+        return 'ok';
     }
 
     

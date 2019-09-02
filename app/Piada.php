@@ -10,6 +10,11 @@ class Piada extends Model{
     {
         return $this->hasOne(User::class);
     }
+    public function likes()
+    {
+        return $this->hasMany('App\Like');
+    }
+    
   /*  public function categoria()
     {
         return $this->hasOne(Categoria::class);

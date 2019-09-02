@@ -55,6 +55,9 @@ Route::get('/getImage/{image}', 'UsersController@getImage');
     // Busca todas as piadas
     Route::get('/piadas','PiadasController@piadas');
 
+    // Busca set likes
+    Route::get('/like/{piadaId}','PiadasController@postLikePiada');
+
     // Busca todas as piadas
     Route::get('/categorias','PiadasController@getCategorias');
 
