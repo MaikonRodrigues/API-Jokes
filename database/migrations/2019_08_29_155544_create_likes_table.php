@@ -18,7 +18,7 @@ class CreateLikesTable extends Migration
             $table->timestamps();
             $table->integer('user_id'); 
             $table->integer('piada_id');
-            $table->boolean('like');
+            $table->integer('like')->default(0);
         });
     }
 

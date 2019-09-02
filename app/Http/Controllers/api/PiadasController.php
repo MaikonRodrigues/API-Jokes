@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Piada;
 use App\Categoria;
 use Response;
@@ -112,37 +113,41 @@ class PiadasController extends Controller
             return 'erro';
         }
     }
-    public function postLikePiada(Request $piadaId)
+    public function postLikePiada(Request $request)
     {
-        $piada_id = $piadaId;
-        $is_like = true;
-        $update = false;
-        $piada = Piada::find($post_id);
-        if (!$piada) { 
-            return null;
+        $piada = Piada::find($request->piada_id);
+        $user = User::find($request->user_id);
+
+        $likes = DB::table('likes')->get();
+
+        foreach ($likes as $like) {
+           if($like->user_id == $user->id && $like->piada_id == $piada->id){
+               if ($like->like == 1) {
+                    $piada->curtidas+=1;
+                    $piada->save();
+                    return "Curtiu";
+                    //dd("curtiu");
+               }else{
+                    $piada->curtidas-=1;
+                    $piada->save();
+                    $like->like = 0;
+                   
+                    return "Descurtiu";
+                    //dd("Descurtiu");
+               }               
+           }else{
+               $likeCriado = new Like();
+               $likeCriado->user_id = $user->id;
+               $likeCriado->piada_id = $piada->id;
+               $likeCriado->like = 1;
+               $likeCriado->save();
+
+               $piada->curtidas+=1;
+               $piada->save();
+
+               return "Curtiu";
+           }
         }
-        $user = Auth::user();
-        $like = $user->likes()->where('piada_id', $piada_id)->first();
-        if ($like) {
-            $already_like = $like->like;
-            $update = true;
-            if ($already_like == $is_like) {
-                $like->delete();
-                return 'deletado';
-            }
-        } else {
-            $like = new Like();
-        }
-        $like->like = $is_like;
-        $like->user_id = $user->id;
-        $like->piada_id = $piada->id;
-        if ($update) {
-            $like->update();
-        } else {
-            $like->save();
-        }
-        return 'ok';
     }
 
-    
 } 
