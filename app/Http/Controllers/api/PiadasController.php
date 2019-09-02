@@ -121,31 +121,32 @@ class PiadasController extends Controller
         $likes = DB::table('likes')->get();
 
         foreach ($likes as $like) {
+           
            if($like->user_id == $user->id && $like->piada_id == $piada->id){
-               if ($like->like == 1) {
+               if ($like->like == 0) {
                     $piada->curtidas+=1;
-                    $piada->save();
-                    return "Curtiu";
+                    $piada->save();    
+                    DB::table('likes')->where('id', $like->id)->update(['like' => 1]);
+                    return $piada;
                     //dd("curtiu");
                }else{
                     $piada->curtidas-=1;
                     $piada->save();
-                    $like->like = 0;
-                   
-                    return "Descurtiu";
+                    DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
+                    return $piada;
                     //dd("Descurtiu");
                }               
-           }else{
-               $likeCriado = new Like();
-               $likeCriado->user_id = $user->id;
-               $likeCriado->piada_id = $piada->id;
-               $likeCriado->like = 1;
-               $likeCriado->save();
+           }else{              
+               $newLike = Like::create([
+                    'user_id' =>  $user->id,
+                    'piada_id' => $piada->id,
+                    'like' => 1
+                ]);                    
 
                $piada->curtidas+=1;
                $piada->save();
 
-               return "Curtiu";
+               return $piada;
            }
         }
     }
