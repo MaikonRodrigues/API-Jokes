@@ -116,37 +116,36 @@ class PiadasController extends Controller
     public function postLikePiada(Request $request)
     {
         $piada = Piada::find($request->piada_id);
+        
         $user = User::find($request->user_id);
 
         $likes = DB::table('likes')->get();
 
-        foreach ($likes as $like) {
-           
+        foreach ($likes as $like) {           
            if($like->user_id == $user->id && $like->piada_id == $piada->id){
-               if ($like->like == 0) {
+                if ($like->like == 0) {
                     $piada->curtidas+=1;
                     $piada->save();    
                     DB::table('likes')->where('id', $like->id)->update(['like' => 1]);
-                    return $piada;
-                    //dd("curtiu");
-               }else{
+
+                    return [$piada];
+                }else{
                     $piada->curtidas-=1;
                     $piada->save();
                     DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
-                    return $piada;
-                    //dd("Descurtiu");
-               }               
+
+                    return [$piada];                   
+                }               
            }else{              
                $newLike = Like::create([
                     'user_id' =>  $user->id,
                     'piada_id' => $piada->id,
                     'like' => 1
-                ]);                    
+                ]);            
 
                $piada->curtidas+=1;
                $piada->save();
-
-               return $piada;
+               return [$piada];
            }
         }
     }
