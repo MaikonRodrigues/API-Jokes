@@ -30,7 +30,8 @@ class UserController extends Controller
             $user->avatar = $filename;
             $user->save();
         }
-        return view("settings", $user); 
+        //return view("settings", $user);
+        return "ok" ;
     }
 
     public function update(UpdateAccount $request){
