@@ -59,6 +59,15 @@ class UsersController extends Controller
         return view("settings", $user);              
     }
 
+    public function updateNome(Request $request){
+        try{           
+            DB::table('users')->where('id', $request->id)->update(['name' => $request->name]);        
+            return "ok";            
+        }catch(\Exepction $erro){
+            return "erro";    
+        }    
+    }
+
     Public function updateAvatar(Request $request){
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');

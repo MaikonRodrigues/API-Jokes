@@ -92,6 +92,7 @@ class PiadasController extends Controller
         try{
             $piadas = Piada::find($id);
             $piadas->descricao = $request->descricao_app;
+            $piadas->categoria_id = $request->categoria_app;
             $piadas->save();
 
             return 'ok';

@@ -42,7 +42,8 @@ Route::post('/updateAvatar', 'UsersController@updateAvatar');
 // Rota para configurar user
 Route::get('/getImage/{image}', 'UsersController@getImage');
 
-
+// Inserir piada
+Route::put('/updateNome','UsersController@updateNome');
 
     /*
 |--------------------------------------------------------------------------
