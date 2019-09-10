@@ -16,6 +16,10 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Like');
     }
+    public function deslikes()
+    {
+        return $this->hasMany('App\DesLike');
+    }
 
     /**
      * The attributes that are mass assignable.

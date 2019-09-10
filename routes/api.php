@@ -45,6 +45,10 @@ Route::get('/getImage/{image}', 'UsersController@getImage');
 // Inserir piada
 Route::put('/updateNome','UsersController@updateNome');
 
+// Busca set likes
+Route::post('/getLink','PiadasController@getLink');
+
+
     /*
 |--------------------------------------------------------------------------
 | API Routes Piadas
@@ -59,6 +63,12 @@ Route::put('/updateNome','UsersController@updateNome');
 
     // Busca set likes
     Route::post('/like','PiadasController@postLikePiada');
+
+    // Busca set likes
+    Route::post('/deslike','PiadasController@postDsLikePiada');
+
+    // Busca set likes
+    Route::post('/getLike','PiadasController@getLike');
 
     // Busca todas as piadas
     Route::get('/categorias','PiadasController@getCategorias');
