@@ -73,6 +73,8 @@ Route::post('/getLink','PiadasController@getLink');
     // Busca todas as piadas
     Route::get('/categorias','PiadasController@getCategorias');
 
+    
+
     // Busca piada pelo id
     Route::get('/piadas/{id}','PiadasController@getPiadas');
 
