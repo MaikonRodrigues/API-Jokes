@@ -131,28 +131,58 @@ class PiadasController extends Controller
         $user = User::find($request->user_id);
 
         $likes = DB::table('likes')->get();
+        $dsLikes = DB::table('des_likes')->get();
 
         foreach ($likes as $like) { 
-           // dd($like->user_id ."==". $user->id .",". $like->piada_id ."==". $piada->id);           
+           // verificando like     
            if($like->user_id == $user->id){
                if ($like->piada_id == $request->piada_id) {
                    $temLike = 1;
-                    if ($like->like == '0') {
-                        $piada->curtidas+=1;
-                        $piada->save();    
-                        DB::table('likes')->where('id', $like->id)->update(['like' => 1]);
-                        
-                        return [$piada];
-                    
-                    }else{
-                        
-                        $piada->curtidas-=1;
-                        $piada->save();
-                        DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
-                        
-                        return [$piada]; 
+                    // verificando dslike
+                    foreach ($dsLikes as $dlike) { 
+                        if($dlike->user_id == $user->id){
+                            if ($dlike->piada_id == $request->piada_id) {
+                                if ($dlike->deslike == '0') {
+
+                                    if ($like->like == '0') {
+                                        $piada->curtidas+=1;
+                                        $piada->save();    
+                                        DB::table('likes')->where('id', $like->id)->update(['like' => 1]);
                                         
-                    }               
+                                        return [$piada];
+                                    }else{
+                                        
+                                        $piada->curtidas-=1;
+                                        $piada->save();
+                                        DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
+                                        
+                                        return [$piada]; 
+                                    } 
+
+                                }else{
+
+                                    DB::table('des_likes')->where('id', $dlike->id)->update(['deslike' => 0]);
+                                    $piada->deslikes-=1;
+                                    $piada->save();
+
+                                    if ($like->like == '0') {
+                                        $piada->curtidas+=1;
+                                        $piada->save();    
+                                        DB::table('likes')->where('id', $like->id)->update(['like' => 1]);
+                                        
+                                        return [$piada];
+                                    }else{
+                                        
+                                        $piada->curtidas-=1;
+                                        $piada->save();
+                                        DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
+                                        
+                                        return [$piada]; 
+                                    }             
+                                }
+                            }
+                        }
+                   }
                }               
             }
              
