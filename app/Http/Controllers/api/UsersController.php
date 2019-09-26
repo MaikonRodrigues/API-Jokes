@@ -41,6 +41,7 @@ class UsersController extends Controller
             return User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'avatar'=> 'defalt.jpg',
                 'password' => Hash::make($request->password),
             ]);             
         }catch(\Exception $erro){
