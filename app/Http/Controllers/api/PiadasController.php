@@ -126,6 +126,7 @@ class PiadasController extends Controller
     public function postLikePiada(Request $request)
     {
         $temLike = 0;
+        $temDesLike = 0;    $deslikId = 0;
         $piada = Piada::find($request->piada_id);
         
         $user = User::find($request->user_id);
@@ -142,6 +143,7 @@ class PiadasController extends Controller
                     foreach ($dsLikes as $dlike) { 
                         if($dlike->user_id == $user->id){
                             if ($dlike->piada_id == $request->piada_id) {
+                                $temDesLike = 1;    $deslikId = $dlike->id;
                                 if ($dlike->deslike == '0') {
 
                                     if ($like->like == '0') {
@@ -187,22 +189,38 @@ class PiadasController extends Controller
             }
              
         }
-        if ($temLike == 0) {                                      
-            $newLike = Like::create([
-                'user_id' =>  $user->id,
-                'piada_id' => $piada->id,
-                'like' => 1 //set true
-            ]);            
-
-            $piada->curtidas+=1;
-            $piada->save();
-            return [$piada];          
+        if ($temLike == 0) { 
+            if($temDesLike == 0){
+                $newLike = Like::create([
+                    'user_id' =>  $user->id,
+                    'piada_id' => $piada->id,
+                    'like' => 1 
+                ]);            
+    
+                $piada->curtidas+=1;
+                $piada->save();
+                return [$piada];    
+            }else{
+                DB::table('des_likes')->where('id', $deslikId)->update(['deslike' => 0]);
+                $piada->deslikes-=1;
+                $newLike = Like::create([
+                    'user_id' =>  $user->id,
+                    'piada_id' => $piada->id,
+                    'like' => 1 
+                ]);            
+    
+                $piada->curtidas+=1;
+                $piada->save();
+                return [$piada];    
+            }                                     
+                 
         }
     }
 
     public function postDsLikePiada(Request $request)
     {
         $temdesLike = 0;
+        $temLike = 0;    $likId = 0;
         $piada = Piada::find($request->piada_id);
         
         $user = User::find($request->user_id);
@@ -219,7 +237,7 @@ class PiadasController extends Controller
                    foreach ($likes as $like) { 
                         if($like->user_id == $user->id){
                             if ($like->piada_id == $request->piada_id) {
-
+                                $temLike = 1;    $likId = $like->id;
                                 if ($like->like == '0') {
 
                                     if ($deslike->deslike == '0') {
@@ -272,16 +290,29 @@ class PiadasController extends Controller
             }
              
         }
-        if ($temdesLike == 0) {                                      
-            $newDesLike = DesLike::create([
-                'user_id' =>  $user->id,
-                'piada_id' => $piada->id,
-                'deslike' => 1 //set true
-            ]);            
-
-            $piada->deslikes+=1;
-            $piada->save();
-            return [$piada];          
+        if ($temdesLike == 0) {
+            if ($temLike == 0) { 
+                $newDesLike = DesLike::create([
+                    'user_id' =>  $user->id,
+                    'piada_id' => $piada->id,
+                    'deslike' => 1 //set true
+                ]);     
+                $piada->deslikes+=1;
+                $piada->save();
+                return [$piada];    
+            }else{
+                DB::table('likes')->where('id', $likId)->update(['like' => 0]);
+                $piada->curtidas-=1;
+                $newDesLike = DesLike::create([
+                    'user_id' =>  $user->id,
+                    'piada_id' => $piada->id,
+                    'deslike' => 1 //set true
+                ]);      
+                $piada->deslikes+=1;
+                $piada->save();
+                return [$piada];   
+            }                                     
+                   
         }
     }
 
