@@ -7,7 +7,7 @@ use App\Piada;
 
 class Categoria extends Model
 {
-  /*  public function piada(){
-        return $this->belongsTo(Piada::class);
-    }*/
+  protected $fillable = [
+    'id', 'nome', 'estado',
+];
 }

@@ -37,7 +37,7 @@ class PiadasController extends Controller
     }
     //Busca todas as piadas
     public function piadas(){
-        return Piada::all();
+        return arsort(Piada::all());
     }
     // Busca todas as categorias 
     public function getCategorias(){               
@@ -62,6 +62,20 @@ class PiadasController extends Controller
             $piadas->user_id = $request->user_id_app;
             $piadas->categoria_id = $request->categoria_app;
             $piadas->save();
+
+            return 'ok';
+
+        }catch(\Exception $erro){
+
+            return $erro;
+        }
+    }
+    public function newCat(Request $request){
+        try{
+            $categoria = new Categoria();
+            $categoria->nome = $request->nomeCat;
+            $categoria->estado = 0;
+            $categoria->save();
 
             return 'ok';
 
@@ -127,6 +141,7 @@ class PiadasController extends Controller
     {
         $temLike = 0;
         $temDesLike = 0;    $deslikId = 0;
+        
         $piada = Piada::find($request->piada_id);
         
         $user = User::find($request->user_id);
