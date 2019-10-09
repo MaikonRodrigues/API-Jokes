@@ -255,23 +255,7 @@ class PiadasController extends Controller
                                 $temLike = 1;    $likId = $like->id;
                                 if ($like->like == '0') {
 
-                                    if ($deslike->deslike == '0') {
-                                        $piada->deslikes+=1;
-                                        $piada->save();    
-                                        DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 1]);
-                                        
-                                        return [$piada];
-                                    
-                                    }else{
-                                        
-                                        $piada->deslikes-=1;
-                                        $piada->save();
-                                        DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 0]);
-                                        
-                                        return [$piada]; 
-                                                        
-                                    }              
-
+                                   
                                 }else{
                                    
                                     DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
