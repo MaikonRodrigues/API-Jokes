@@ -151,13 +151,13 @@ class PiadasController extends Controller
 
         foreach ($likes as $like) { 
            // verificando like     
-           if($like->user_id == $user->id){
-               if ($like->piada_id == $request->piada_id) {
+           if($like->user_id == $user->id && $like->piada_id == $request->piada_id){
+               
                    $temLike = 1;
                     // verificando dslike
                     foreach ($dsLikes as $dlike) { 
-                        if($dlike->user_id == $user->id){
-                            if ($dlike->piada_id == $request->piada_id) {
+                        if($dlike->user_id == $user->id && $dlike->piada_id == $request->piada_id){
+                            
                                 $temDesLike = 1;    $deslikId = $dlike->id;
                                 if ($dlike->deslike == '0') {
 
@@ -197,10 +197,16 @@ class PiadasController extends Controller
                                         return [$piada]; 
                                     }             
                                 }
-                            }
+                            
                         }
                    }
-               }               
+                             
+            }else {
+                foreach ($dsLikes as $dlike) { 
+                    if($dlike->user_id == $user->id && $dlike->piada_id == $request->piada_id){                        
+                        $temDesLike = 1;    $deslikId = $dlike->id;
+                    }
+                }
             }
              
         }
@@ -234,8 +240,8 @@ class PiadasController extends Controller
 
     public function postDsLikePiada(Request $request)
     {
-        $temdesLike = 0;
-        $temLike = 0;    $likId = 0;
+        $temdesLike = 0;   $temLike = 0;    $likId = 0;
+
         $piada = Piada::find($request->piada_id);
         
         $user = User::find($request->user_id);
@@ -245,65 +251,68 @@ class PiadasController extends Controller
 
         foreach ($deslikes as $deslike) { 
             // verificando deslike       
-           if($deslike->user_id == $user->id){
-               if ($deslike->piada_id == $request->piada_id) {
-                   $temdesLike = 1;
+           if($deslike->user_id == $user->id && $deslike->piada_id == $request->piada_id){  // Se passar tem deslike
+                    $temdesLike = 1;
                     // verificando like 
-                   foreach ($likes as $like) { 
-                        if($like->user_id == $user->id){
-                            if ($like->piada_id == $request->piada_id) {
-                                $temLike = 1;    $likId = $like->id;
-                                if ($like->like == '0') {
+                    foreach ($likes as $like) { 
 
-                                    if ($deslike->deslike == '0') {
-                                        $piada->deslikes+=1;
-                                        $piada->save();    
-                                        DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 1]);
-                                        
-                                        return [$piada];
+                        if($like->user_id == $user->id && $like->piada_id == $request->piada_id){   // Se passar tem like                                                    
+                            $temLike = 1;    $likId = $like->id;
+
+                            if ($like->like == '0') {
+
+                                if ($deslike->deslike == '0') {
+                                    $piada->deslikes+=1;
+                                    $piada->save();    
+                                    DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 1]);
                                     
-                                    }else{
-                                        
-                                        $piada->deslikes-=1;
-                                        $piada->save();
-                                        DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 0]);
-                                        
-                                        return [$piada]; 
-                                                        
-                                    }              
-
+                                    return [$piada];
+                                
                                 }else{
-                                   
-                                    DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
-                                    $piada->curtidas-=1;
-                                    $piada->save();
-
-                                    if ($deslike->deslike == '0') {
-                                        $piada->deslikes+=1;
-                                        $piada->save();    
-                                        DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 1]);
-                                        
-                                        return [$piada];
                                     
-                                    }else{
-                                        
-                                        $piada->deslikes-=1;
-                                        $piada->save();
-                                        DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 0]);
-                                        
-                                        return [$piada]; 
-                                                        
-                                    }              
+                                    $piada->deslikes-=1;
+                                    $piada->save();
+                                    DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 0]);
+                                    
+                                    return [$piada]; 
+                                                    
+                                }              
 
-                                }
+                            }else{
+                               
+                                DB::table('likes')->where('id', $like->id)->update(['like' => 0]);
+                                $piada->curtidas-=1;
+                                $piada->save();
+
+                                if ($deslike->deslike == '0') {
+                                    $piada->deslikes+=1;
+                                    $piada->save();    
+                                    DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 1]);
+                                    
+                                    return [$piada];
+                                
+                                }else{
+                                    
+                                    $piada->deslikes-=1;
+                                    $piada->save();
+                                    DB::table('des_likes')->where('id', $deslike->id)->update(['deslike' => 0]);
+                                    
+                                    return [$piada]; 
+                                                    
+                                }              
+
                             }
+                            
                         }
+                    }                   
+                            
+            }  else {   // Não tem deslike
+                foreach ($likes as $like) { 
+                    if($like->user_id == $user->id && $like->piada_id == $request->piada_id){   // Se passar tem like                                                    
+                        $temLike = 1;    $likId = $like->id;
                     }
-
-                    
-               }               
-            }
-             
+                }
+            }           
         }
         if ($temdesLike == 0) {
             if ($temLike == 0) { 
