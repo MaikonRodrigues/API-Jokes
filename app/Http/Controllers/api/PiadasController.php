@@ -137,7 +137,7 @@ class PiadasController extends Controller
         return [$piada];
     }
 
-    public function postLikePiada(Request $request)
+    public function post_LikePiada(Request $request)
     {
         $temLike = 0;
         $temDesLike = 0;    $deslikId = 0;
@@ -261,7 +261,199 @@ class PiadasController extends Controller
         }
     }
 
-    public function postDsLikePiada(Request $request)
+    public function postLikePiada(Request $request){
+
+        //Pegando a piada e o usuario atravez das informações request
+        $piada = Piada::find($request->piada_id);    $user = User::find($request->user_id);
+
+        // Buscando todos os likes e dslikes
+        $deslikes = DB::table('des_likes')->get();
+        $likes = DB::table('likes')->get();
+        // verificando nas tabelas likes e  dslikes a existencia de likes e dslikes com esses ids
+        foreach ($deslikes as $deslike) { 
+            if($deslike->user_id == $user->id && $deslike->piada_id == $request->piada_id){  // Se passar tem deslike
+                $temdesLike = 1;
+                $id_do_dslike = $deslike->id;   // se tiver dslike pego o id dele
+            }else{
+                $temdesLike = 0;
+            }
+        }
+        foreach ($likes as $like) { 
+            if($like->user_id == $user->id && $like->piada_id == $request->piada_id){  // Se passar tem deslike
+                $temLike = 1;
+                $id_do_like = $like->id;    // se tiver like pego o id dele
+            }else{
+                $temLike = 0;
+            }
+        }
+        // ifs de acordo com o resultado da consulta acima
+        if($temLike == 0 && $temdesLike == 0){  //Piada nao tem nenhuma curtina e nem um dslike
+            $newLike = Like::create([       //  Crio new like 
+                'user_id' =>  $user->id,    // com id do usuario e da piada
+                'piada_id' => $piada->id,
+                'like' => 1                 //  set como 1
+            ]);            
+
+            $piada->curtidas+=1;        // incremento a curtida da piada
+            $piada->save();
+            return [$piada];            
+        }else if($temLike == 0 && $temdesLike == 1){
+            $newLike = Like::create([       //  Crio new like 
+                'user_id' =>  $user->id,    // com id do usuario e da piada
+                'piada_id' => $piada->id,
+                'like' => 1                 //  set como 1
+            ]);            
+
+            $piada->curtidas+=1;        // incremento a curtida da piada
+            DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 0]);   // set dslike como 0 com base no id que foi pego
+            $piada->deslikes-=1;        // decremento o dslike
+            $piada->save();
+            return [$piada];  
+        }else if($temLike == 1 && $temdesLike == 0){
+            $like_exist = Like::find($id_do_like); 
+            if($like_exist->like == 1){
+                DB::table('likes')->where('id', $id_do_like)->update(['like' => 0]);
+                $piada->curtidas-=1;    //decremento a curtida 
+                $piada->save();
+                return [$piada];    
+            }else{
+                DB::table('likes')->where('id', $id_do_like)->update(['like' => 1]);
+                $piada->curtidas+=1;    //decremento a curtida 
+                $piada->save();
+                return [$piada];    
+            }
+            /*
+            DB::table('likes')->where('id', $id_do_like)->update(['like' => 1]);    //set o like para 1
+            $piada->curtidas+=1;    //incremento a curtida 
+            $piada->save();
+            return [$piada];
+            */
+        }else if($temLike == 1 && $temdesLike == 1){
+            // Pego o like e o dslike existente
+            $like_exist = Like::find($id_do_like);  $dslike_exist = DesLike::find($id_do_dslike);
+
+            //verificando se ja tem um like ou dslike
+            if($like_exist->like == 0 && $dslike_exist->deslike == 0){
+
+                DB::table('likes')->where('id', $id_do_like)->update(['like' => 1]);
+                $piada->curtidas+=1;    //incremento a curtida 
+                $piada->save();
+                return [$piada];
+
+            }else if($like_exist->like == 1 && $dslike_exist->deslike == 0){
+                
+                DB::table('likes')->where('id', $id_do_like)->update(['like' => 0]);
+                $piada->curtidas-=1;    //decremento a curtida 
+                $piada->save();
+                return [$piada];
+
+            }else if($like_exist->like == 0 && $dslike_exist->deslike == 1){
+
+                DB::table('likes')->where('id', $id_do_like)->update(['like' => 1]);
+                $piada->curtidas+=1;    //incremento a curtida 
+                DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 0]);   // set dslike como 0 com base no id que foi pego
+                $piada->deslikes-=1;        // decremento o dslike
+                $piada->save();
+                return [$piada];  
+            }
+            
+        }
+    }
+
+    public function  postDsLikePiada(Request $request){
+        //Pegando a piada e o usuario atravez das informações request
+        $piada = Piada::find($request->piada_id);    $user = User::find($request->user_id);
+
+        // Buscando todos os likes e dslikes
+        $deslikes = DB::table('des_likes')->get();
+        $likes = DB::table('likes')->get();
+        // verificando nas tabelas likes e  dslikes a existencia de likes e dslikes com esses ids
+        foreach ($deslikes as $deslike) { 
+            if($deslike->user_id == $user->id && $deslike->piada_id == $request->piada_id){  // Se passar tem deslike
+                $temdesLike = 1;
+                $id_do_dslike = $deslike->id;   // se tiver dslike pego o id dele
+            }else{
+                $temdesLike = 0;
+            }
+        }
+        foreach ($likes as $like) { 
+            if($like->user_id == $user->id && $like->piada_id == $request->piada_id){  // Se passar tem deslike
+                $temLike = 1;
+                $id_do_like = $like->id;    // se tiver like pego o id dele
+            }else{
+                $temLike = 0;
+            }
+        }
+        // ifs de acordo com o resultado da consulta acima
+        if($temLike == 0 && $temdesLike == 0){  //Piada nao tem nenhuma curtina e nem um dslike
+            $newDesLike = DesLike::create([
+                'user_id' =>  $user->id,        //  Crio new dslike 
+                'piada_id' => $piada->id,       // com id do usuario e da piada
+                'deslike' => 1                  //  set como 1
+            ]);     
+
+            $piada->deslikes+=1;        // incremento a curtida da piada
+            $piada->save();
+            return [$piada];            
+        }else if($temdesLike == 1 && $temLike == 0 ){
+            $dslike_exist = DesLike::find($id_do_dslike);
+            if($dslike_exist->deslike == 0){
+                DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 1]);    //set o like para 1
+                $piada->deslikes+=1;    //incremento a curtida 
+                $piada->save();
+                return [$piada];
+            }else if($dslike_exist->deslike == 1){
+                DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 0]);    //set o like para 1
+                $piada->deslikes-=1;    //incremento a curtida 
+                $piada->save();
+                return [$piada];
+            }        
+        }else if($temdesLike == 0 && $temLike == 1 ){
+            $newDesLike = DesLike::create([
+                'user_id' =>  $user->id,        //  Crio new dslike 
+                'piada_id' => $piada->id,       // com id do usuario e da piada
+                'deslike' => 1                  //  set como 1
+            ]);        
+
+            DB::table('likes')->where('id', $id_do_like)->update(['deslike' => 0]);   // set dslike como 0 com base no id que foi pego
+            $piada->curtidas-=1;        // incremento a curtida da piada
+            $piada->deslikes+=1;        // decremento o dslike
+            $piada->save();
+            return [$piada];  
+        }else if($temLike == 1 && $temdesLike == 1){
+            // Pego o like e o dslike existente
+            $like_exist = Like::find($id_do_like);  $dslike_exist = DesLike::find($id_do_dslike);
+
+            //verificando se ja tem um like ou dslike
+            if($like_exist->like == 0 && $dslike_exist->deslike == 0){
+
+                DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 1]);
+                $piada->deslikes+=1;    //incremento a curtida 
+                $piada->save();
+                return [$piada];
+
+            }else if($like_exist->like == 1 && $dslike_exist->deslike == 0){
+
+                DB::table('likes')->where('id', $id_do_like)->update(['like' => 0]);
+                $piada->curtidas-=1;    //incremento a curtida 
+                DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 1]);   // set dslike como 0 com base no id que foi pego
+                $piada->deslikes+=1;        // decremento o dslike
+                $piada->save();
+                return [$piada];                
+
+            }else if($like_exist->like == 0 && $dslike_exist->deslike == 1){
+
+                DB::table('des_likes')->where('id', $id_do_dslike)->update(['deslike' => 0]);
+                $piada->deslikes-=1;    //decremento a curtida 
+                $piada->save();
+                return [$piada];
+                 
+            }
+            
+        }
+    }
+
+    public function post_DsLikePiada(Request $request)
     {
         $temdesLike = 0;   $temLike = 0;   // $likId = 0;
 
