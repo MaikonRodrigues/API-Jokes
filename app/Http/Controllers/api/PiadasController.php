@@ -278,14 +278,7 @@ class PiadasController extends Controller
                 $temdesLike = 0;
             }
         }
-        foreach ($likes as $like) { 
-            if($like->user_id == $user->id && $like->piada_id == $request->piada_id){  // Se passar tem deslike
-                $temLike = 1;
-                $id_do_like = $like->id;    // se tiver like pego o id dele
-            }else{
-                $temLike = 0;
-            }
-        }
+       
         // ifs de acordo com o resultado da consulta acima
         if($temLike == 0 && $temdesLike == 0){  //Piada nao tem nenhuma curtina e nem um dslike
             $newLike = Like::create([       //  Crio new like 
