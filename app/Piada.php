@@ -14,6 +14,10 @@ class Piada extends Model{
     {
         return $this->hasMany('App\Like');
     }
+    public function reacao()
+    {
+        return $this->hasMany('App\Reacao');
+    }
     
   /*  public function categoria()
     {

@@ -265,10 +265,13 @@ class PiadasController extends Controller
 
         //Pegando a piada e o usuario atravez das informações request
         $piada = Piada::find($request->piada_id);    $user = User::find($request->user_id);
-
+        //Pegando o usuario via id da request
+        $user = User::find($request->user_id);
         // Buscando todos os likes e dslikes
         $deslikes = DB::table('des_likes')->get();
         $likes = DB::table('likes')->get();
+        //  Inicialisando variaveis
+        $temdesLike = 0; $temLike = 0;
         // verificando nas tabelas likes e  dslikes a existencia de likes e dslikes com esses ids
         foreach ($deslikes as $deslike) { 
             if($deslike->user_id == $user->id && $deslike->piada_id == $request->piada_id){  // Se passar tem deslike
@@ -278,7 +281,14 @@ class PiadasController extends Controller
                 $temdesLike = 0;
             }
         }
-       
+        foreach ($likes as $like) { 
+            if($like->user_id == $user->id && $like->piada_id == $request->piada_id){  // Se passar tem deslike
+                $temLike = 1;
+                $id_do_like = $like->id;    // se tiver like pego o id dele
+            }else{
+                $temLike = 0;
+            }
+        }
         // ifs de acordo com o resultado da consulta acima
         if($temLike == 0 && $temdesLike == 0){  //Piada nao tem nenhuma curtina e nem um dslike
             $newLike = Like::create([       //  Crio new like 
@@ -356,13 +366,16 @@ class PiadasController extends Controller
     public function  postDsLikePiada(Request $request){
         //Pegando a piada e o usuario atravez das informações request
         $piada = Piada::find($request->piada_id);    $user = User::find($request->user_id);
-
+        //Pegando o usuario via id da request
+        $user = User::find($request->user_id);
         // Buscando todos os likes e dslikes
         $deslikes = DB::table('des_likes')->get();
         $likes = DB::table('likes')->get();
+        //  Inicialisando variaveis
+        $temdesLike = 0; $temLike = 0;
         // verificando nas tabelas likes e  dslikes a existencia de likes e dslikes com esses ids
         foreach ($deslikes as $deslike) { 
-            if($deslike->user_id == $user->id && $deslike->piada_id == $request->piada_id){  // Se passar tem deslike
+            if($deslike->user_id == $user->id && $deslike->piada_id == $piada->id){  // Se passar tem deslike
                 $temdesLike = 1;
                 $id_do_dslike = $deslike->id;   // se tiver dslike pego o id dele
             }else{
