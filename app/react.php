@@ -20,3 +20,4 @@ class react extends Model
         return $this->belongsTo('App\Piada');
     }
 }
+ 

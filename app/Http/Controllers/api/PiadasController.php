@@ -107,31 +107,27 @@ class PiadasController extends Controller
                     $piada->deslikes-=1;
                     $piada->save();
                     return [$piada];
-                }
+                } 
             }
         }
         if($temReacao == 0){
-            try{
-                $reacao = new react();
-                $reacao->reacao = $request->reacao;
-                $reacao->piada_id = $request->piada_id;
-                $reacao->user_id = $request->user_id;
-                $reacao->save();
+           
+            $reacao = new react();
+            $reacao->reacao = $request->reacao;
+            $reacao->piada_id = $request->piada_id;
+            $reacao->user_id = $request->user_id;
+            $reacao->save();
 
-                if($request->reacao == 1){
-                    $piada->curtida+=1;
-                    $piada->save();
-                    return [$piada];
-                }else if($request->reacao == 2){
-                    $piada->deslikes+=1;
-                    $piada->save();
-                    return [$piada];
-                } 
-
-            }catch(\Exception $erro){
-    
-                return $erro;
-            }
+            if($request->reacao == 1){
+                $piada->curtidas+=1;
+                $piada->save();
+                return [$piada];
+            }else if($request->reacao == 2){
+                $piada->deslikes+=1;
+                $piada->save();
+                return [$piada];
+            } 
+           
         }
        
     }
