@@ -73,6 +73,12 @@ Route::post('/getLink','PiadasController@getLink');
     // Busca todas as piadas
     Route::get('/categorias','PiadasController@getCategorias');
 
+    // Busca todas as reacoes
+    Route::get('/reacoes','PiadasController@getReacoes');
+
+    // cadastrar reacao
+    Route::post('/newReact','PiadasController@newReact'); 
+
     // Solicitar nova categoria
     Route::post('/newCat','PiadasController@newCat');    
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReacaosTable extends Migration
+class CreateReactsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateReacaosTable extends Migration
      */
     public function up()
     {
-        Schema::create('reacoes', function (Blueprint $table) {
+        Schema::create('reacts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id'); 
             $table->integer('piada_id');
@@ -29,6 +29,6 @@ class CreateReacaosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reacoes');
+        Schema::dropIfExists('reacts');
     }
 }

@@ -11,6 +11,7 @@ use Response;
 use App\User; 
 use App\Like;
 use App\DesLike;
+use App\react;
 use Auth;
 
 
@@ -70,6 +71,70 @@ class PiadasController extends Controller
             return $erro;
         }
     }
+    public function newReact(Request $request){
+        $reacoes = react::all();   $temReacao = 0; $piada = Piada::find($request->piada_id);
+        foreach($reacoes as $reac){
+            if($reac->piada_id == $request->piada_id && $reac->user_id == $request->user_id){
+                if($reac->reacao == 1 && $request->reacao == 1){    // User enviou um like onde ja tinha um like
+                    $reac->reacao = 0;  $reac->save();  // set a reacao como 0
+                    $piada->curtidas-=1;    // subtrai uma curtida
+                    $piada->save();
+                    return [$piada];
+                }else if($reac->reacao == 1  && $request->reacao == 2){ // User enviou um dislike onde ja tinha um like
+                    $reac->reacao = 2;  $reac->save();
+                    $piada->curtidas-=1;
+                    $piada->deslikes+=1;
+                    return [$piada];
+                }else if($reac->reacao == 0  && $request->reacao == 2){ // User enviou um dislike onde nao havia nenhuma reação
+                    $reac->reacao = 2;  $reac->save();
+                    $piada->deslikes+=1;
+                    $piada->save();
+                    return [$piada];
+                }else if($reac->reacao == 0  && $request->reacao == 1){ // User enviou um like onde ja tinha um like
+                    $reac->reacao = 1;  $reac->save();
+                    $piada->curtidas+=1;
+                    $piada->save();
+                    return [$piada];
+                }else if($reac->reacao == 2  && $request->reacao == 1){ // User enviou um like onde ja tinha um dislike
+                    $reac->reacao = 1;  $reac->save();
+                    $piada->curtidas+=1;
+                    $piada->deslikes-=1;
+                    $piada->save();
+                    return [$piada];
+                }
+                else if($reac->reacao == 2  && $request->reacao == 2){  // User enviou um dislike onde ja tinha um dislike
+                    $reac->reacao = 0;  $reac->save();
+                    $piada->deslikes-=1;
+                    $piada->save();
+                    return [$piada];
+                }
+            }
+        }
+        if($temReacao == 0){
+            try{
+                $reacao = new react();
+                $reacao->reacao = $request->reacao;
+                $reacao->piada_id = $request->piada_id;
+                $reacao->user_id = $request->user_id;
+                $reacao->save();
+
+                if($request->reacao == 1){
+                    $piada->curtida+=1;
+                    $piada->save();
+                    return [$piada];
+                }else if($request->reacao == 2){
+                    $piada->deslikes+=1;
+                    $piada->save();
+                    return [$piada];
+                } 
+
+            }catch(\Exception $erro){
+    
+                return $erro;
+            }
+        }
+       
+    }
     public function newCat(Request $request){
         try{
             $categoria = new Categoria();
@@ -126,7 +191,7 @@ class PiadasController extends Controller
             $piada = Piada::find($id);
             $piada->delete();
             return 'ok';
-
+ 
         }catch(\Exception $erro){
 
             return 'erro';
@@ -135,6 +200,11 @@ class PiadasController extends Controller
     public function getLike(Request $request){
         $piada = Piada::find($request->piada_id);
         return [$piada];
+    }
+
+    // Funcao que busca todas as reacoes 
+    public function getReacoes(){
+        return Reacao::all();
     }
 
     public function post_LikePiada(Request $request)
