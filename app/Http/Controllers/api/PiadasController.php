@@ -73,63 +73,72 @@ class PiadasController extends Controller
     }
     public function newReact(Request $request){
         $reacoes = react::all();   $temReacao = 0; $piada = Piada::find($request->piada_id);
-        foreach($reacoes as $reac){
-            if($reac->piada_id == $request->piada_id && $reac->user_id == $request->user_id){
-                if($reac->reacao == 1 && $request->reacao == 1){    // User enviou um like onde ja tinha um like
-                    $reac->reacao = 0;  $reac->save();  // set a reacao como 0
-                    $piada->curtidas-=1;    // subtrai uma curtida
-                    $piada->save();
-                    return [$piada];
-                }else if($reac->reacao == 1  && $request->reacao == 2){ // User enviou um dislike onde ja tinha um like
-                    $reac->reacao = 2;  $reac->save();
-                    $piada->curtidas-=1;
-                    $piada->deslikes+=1;
-                    return [$piada];
-                }else if($reac->reacao == 0  && $request->reacao == 2){ // User enviou um dislike onde nao havia nenhuma reação
-                    $reac->reacao = 2;  $reac->save();
-                    $piada->deslikes+=1;
-                    $piada->save();
-                    return [$piada];
-                }else if($reac->reacao == 0  && $request->reacao == 1){ // User enviou um like onde ja tinha um like
-                    $reac->reacao = 1;  $reac->save();
-                    $piada->curtidas+=1;
-                    $piada->save();
-                    return [$piada];
-                }else if($reac->reacao == 2  && $request->reacao == 1){ // User enviou um like onde ja tinha um dislike
-                    $reac->reacao = 1;  $reac->save();
-                    $piada->curtidas+=1;
-                    $piada->deslikes-=1;
-                    $piada->save();
-                    return [$piada];
+        /*
+        *    Se a reacao for = 0 retorno a piada. quando passo 0 preciso somente das informacoes de reacoes
+        *    Se a reacao for = 1 entao modifico a reacao para like e incremento a curtida
+        *    Se a reacao for = 2 entao modifico a reacao para deslike e incremento dslike
+        */
+        if($request->reacao == 0){
+            return [$piada];
+        }else{
+            foreach($reacoes as $reac){
+                if($reac->piada_id == $request->piada_id && $reac->user_id == $request->user_id){
+                    if($reac->reacao == 1 && $request->reacao == 1){    // User enviou um like onde ja tinha um like
+                        $reac->reacao = 0;  $reac->save();  // set a reacao como 0
+                        $piada->curtidas-=1;    // subtrai uma curtida
+                        $piada->save();
+                        return [$piada];
+                    }else if($reac->reacao == 1  && $request->reacao == 2){ // User enviou um dislike onde ja tinha um like
+                        $reac->reacao = 2;  $reac->save();
+                        $piada->curtidas-=1;
+                        $piada->deslikes+=1;
+                        return [$piada];
+                    }else if($reac->reacao == 0  && $request->reacao == 2){ // User enviou um dislike onde nao havia nenhuma reação
+                        $reac->reacao = 2;  $reac->save();
+                        $piada->deslikes+=1;
+                        $piada->save();
+                        return [$piada];
+                    }else if($reac->reacao == 0  && $request->reacao == 1){ // User enviou um like onde ja tinha um like
+                        $reac->reacao = 1;  $reac->save();
+                        $piada->curtidas+=1;
+                        $piada->save();
+                        return [$piada];
+                    }else if($reac->reacao == 2  && $request->reacao == 1){ // User enviou um like onde ja tinha um dislike
+                        $reac->reacao = 1;  $reac->save();
+                        $piada->curtidas+=1;
+                        $piada->deslikes-=1;
+                        $piada->save();
+                        return [$piada];
+                    }
+                    else if($reac->reacao == 2  && $request->reacao == 2){  // User enviou um dislike onde ja tinha um dislike
+                        $reac->reacao = 0;  $reac->save();
+                        $piada->deslikes-=1;
+                        $piada->save();
+                        return [$piada];
+                    } 
                 }
-                else if($reac->reacao == 2  && $request->reacao == 2){  // User enviou um dislike onde ja tinha um dislike
-                    $reac->reacao = 0;  $reac->save();
-                    $piada->deslikes-=1;
+            }
+            //  Se nao entrar no laço inicial entao nao tem registro de reação na tabela
+            if($temReacao == 0){    
+               
+                $reacao = new react();  // entao e criado uma reacao com o id da piada e de quem curtiu
+                $reacao->reacao = $request->reacao;
+                $reacao->piada_id = $request->piada_id;
+                $reacao->user_id = $request->user_id;
+                $reacao->save();
+    
+                if($request->reacao == 1){  // 1- curtida
+                    $piada->curtidas+=1;
+                    $piada->save();
+                    return [$piada];
+                }else if($request->reacao == 2){    // 2- dislike
+                    $piada->deslikes+=1;
                     $piada->save();
                     return [$piada];
                 } 
+               
             }
         }
-        if($temReacao == 0){
-           
-            $reacao = new react();
-            $reacao->reacao = $request->reacao;
-            $reacao->piada_id = $request->piada_id;
-            $reacao->user_id = $request->user_id;
-            $reacao->save();
-
-            if($request->reacao == 1){
-                $piada->curtidas+=1;
-                $piada->save();
-                return [$piada];
-            }else if($request->reacao == 2){
-                $piada->deslikes+=1;
-                $piada->save();
-                return [$piada];
-            } 
-           
-        }
-       
     }
     public function newCat(Request $request){
         try{
