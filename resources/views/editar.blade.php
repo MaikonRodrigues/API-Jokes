@@ -29,7 +29,7 @@
                             
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Categoria</label>
-                                <input type="text" class="form-control"  name="categoria_form" value= "{{$categoria}}"  required>
+                                <input type="text" class="form-control"  name="categoria_form" value= "{{$categoria_id}}"  required>
                             </div>  
                         </div>
                         <!-- /.box-body -->

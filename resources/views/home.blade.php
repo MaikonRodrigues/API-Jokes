@@ -27,7 +27,7 @@
             <tbody><tr>
               <th>ID</th>
               <th>Categoria</th>
-              <th>Liks</th>
+              <th>Likes</th>
               <th>Deslikes</th>
               <th>Descrição</th>
               <th>Opções</th>
@@ -40,8 +40,8 @@
                   <td>{{ $cat->nome }}</td>
                 @endif
               @endforeach
-              <td><span class="label label-danger">{{ $pia->curtidas }}</span></td>
-              <td><span class="label label-success">{{ $pia->deslikes }}</span></td>              
+              <td><span class="label label-success">{{ $pia->curtidas }}</span></td>
+              <td><span class=" label label-danger">{{ $pia->deslikes }}</span></td>              
               <td>{{ $pia->descricao }}</td>
               <td> 
                 <a class="btn btn-info" href= "editar/{{$pia->id}}">Editar</a> 

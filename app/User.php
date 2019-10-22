@@ -12,17 +12,11 @@ class User extends Authenticatable
     public function piada(){
         return $this->belongsTo(Piada::class);
     }
-    public function likes()
+   
+    
+    public function react()
     {
-        return $this->hasMany('App\Like');
-    }
-    public function deslikes()
-    {
-        return $this->hasMany('App\DesLike');
-    }
-    public function reacao()
-    {
-        return $this->hasMany('App\Reacao');
+        return $this->hasMany('App\react');
     }
 
     /**
