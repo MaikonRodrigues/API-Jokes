@@ -75,9 +75,6 @@ class UsersController extends Controller
             $filename = time().'.'.$avatar->getClientOriginalExtension();            
             Image::make($avatar)->resize(300, 300)->save( public_path('uploads/avatars/'.$filename ));
             $user = Auth::find($request->id);
-           /* if ($user->avatar != 'defalt.jpg') {
-                Image::delete('uploads/avatars/'.$user->avatar);
-            }    */        
             $user->avatar = $filename;
             $user->save();
             return 'ok'; 
@@ -98,9 +95,9 @@ class UsersController extends Controller
             $user->password = bcrypt(Request::input('password')); // muda a senha do seu usuario já criptografada pela função bcrypt
         }
 
-        $user->save(); // salva o usuario alterado =)
+        $user->save(); // salva o usuario alterado 
 
         Flash::message('Atualizado com sucesso!');
-        return Redirect::to("home"); // redireciona pra rota que você achar melhor =)
+        return Redirect::to("home"); // redireciona pra rota que você achar melhor 
     }
 }
